@@ -39,21 +39,27 @@ pwd: Prints the current working directory.
 
 Example:
 
-```$ pwd
+```bash
+$ pwd
 /home/user
-cd <dir>: Changes the current directory to the specified one.```
+cd <dir>: Changes the current directory to the specified one.
 
 Example:
 
+```bash
+$ cd /path/to/directory
 
-```$ cd /path/to/directory```
+
 Redirection: You can redirect output or error to a file using the following operators:
 
-```>: Redirects standard output to a file.
+```bash
+>: Redirects standard output to a file.
 >>: Appends standard output to a file.
 2>: Redirects standard error to a file.
-2>>: Appends standard error to a file.```
+2>>: Appends standard error to a file.
+
 Example:
 
-```$ echo "Hello, World!" > output.txt```
+```bash
+$ echo "Hello, World!" > output.txt
 This will create (or overwrite) the output.txt file with the output of the echo command.
