@@ -46,8 +46,7 @@ cd <dir>: Changes the current directory to the specified one.
 
 Example:
 
-```
-$ cd /path/to/directory
+```$ cd /path/to/directory
 
 
 Redirection: You can redirect output or error to a file using the following operators:
@@ -60,6 +59,5 @@ Redirection: You can redirect output or error to a file using the following oper
 
 Example:
 
-```bash
-$ echo "Hello, World!" > output.txt
+```$ echo "Hello, World!" > output.txt
 This will create (or overwrite) the output.txt file with the output of the echo command.
