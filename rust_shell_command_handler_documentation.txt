@@ -1,0 +1,103 @@
+
+# Rust Shell-like Command Handler Documentation
+
+## Overview
+This Rust program implements a shell-like command handler that can execute built-in commands (like `cd` and `pwd`), handle external commands, and manage output and error redirections. It uses a global variable for the current working directory and processes commands entered by the user.
+
+## Dependencies
+- `lazy_static`: Used for defining global variables that are lazily initialized at runtime.
+- `std::collections::HashMap`: Used to map command names to their corresponding handlers.
+- `std::env`: Provides functionality to interact with environment variables.
+- `std::io`: Used for reading input from the user and writing output to the console.
+- `std::fs`: Provides file system operations such as checking the existence of files or directories.
+- `std::sync::Mutex`: Ensures thread-safe access to shared mutable data.
+
+## Key Functions and Methods
+
+### 1. `is_builtin(cmd: &str) -> Option<&'static str>`
+Checks if a command is a shell built-in command.
+- **Input**: `cmd` (command name as a string)
+- **Output**: `Option<&'static str>` (returns a message for built-in commands, `None` otherwise)
+
+### 2. `handle_cd(args: &[&String], mut handle: Box<dyn Write>)`
+Handles the `cd` (change directory) command.
+- **Input**: `args` (arguments passed with the command)
+- **Output**: Prints a message indicating whether the directory change was successful or an error occurred.
+- **Logic**: Expands the tilde (`~`) to the home directory and updates the current directory.
+
+### 3. `handle_pwd(_: &[&String], mut handle: Box<dyn Write>)`
+Handles the `pwd` (print working directory) command.
+- **Input**: `args` (empty slice, since no arguments are needed for `pwd`)
+- **Output**: Prints the current working directory.
+
+### 4. `handle_cmd(cmd: &str)`
+Handles the execution of a given command.
+- **Input**: `cmd` (command string entered by the user)
+- **Logic**: The function processes the command, parses any redirections (e.g., `>`, `2>`, `>>`), and calls the appropriate handler. It also checks if the command is a built-in or external command.
+
+### 5. `check_cmd_in_path(cmd: &str) -> Option<PathBuf>`
+Checks if a command exists in the system's `PATH`.
+- **Input**: `cmd` (command name as a string)
+- **Output**: `Option<PathBuf>` (returns the path to the command if found, `None` otherwise)
+
+### 6. `handle_path_cmd(cmd: &str, args: &[&String], mut handle: Box<dyn Write>)`
+Handles the execution of external commands that are found in the system's `PATH`.
+- **Input**: `cmd` (command name), `args` (command arguments), `handle` (output handle for writing results)
+- **Output**: Executes the external command and writes its output and errors.
+
+### 7. `handle_quotes(args_str: &str) -> Vec<String>`
+Parses arguments and handles quoted strings (single and double quotes) in the command line.
+- **Input**: `args_str` (command string with arguments)
+- **Output**: A vector of strings representing parsed arguments.
+
+### 8. `parse_redirection<'a>(args: &'a Vec<String>) -> (Vec<&'a String>, Option<&'a String>, Option<&'a String>, bool, bool)`
+Parses redirection operators (`>`, `>>`, `2>`, `2>>`) for output and error redirection.
+- **Input**: `args` (arguments passed to the command)
+- **Output**: A tuple containing:
+  - `cmd_args`: The command arguments excluding redirection
+  - `output_file`: The output file for redirection
+  - `error_file`: The error file for redirection
+  - `append_output`: Whether output should be appended
+  - `append_error`: Whether error should be appended
+
+### 9. `main()`
+The main entry point of the program.
+- **Logic**: Reads user input in a loop, processes the command, and invokes the appropriate handler function.
+
+## Global Variables
+
+### 1. `CMD_MAP`
+A global, lazily initialized `HashMap` that maps command names (e.g., `cd`, `pwd`) to their respective handlers.
+
+### 2. `CURRENT_DIR`
+A global `Mutex<PathBuf>` variable that holds the current working directory. It is used to track the state of the working directory across different commands.
+
+## Key Concepts
+
+### 1. **Lazy Static**
+The `lazy_static` crate allows defining static variables that are initialized lazily at runtime. This is useful for variables like `CMD_MAP` and `CURRENT_DIR` that need to be initialized based on runtime logic.
+
+### 2. **Mutex**
+A `Mutex` is used to ensure that access to `CURRENT_DIR` is thread-safe. It allows multiple threads to lock and access the variable without causing data races.
+
+### 3. **Boxing**
+The program uses `Box<dyn Write>` for dynamic dispatch, allowing the same handler function to work with different types of output handles (like stdout, file handles).
+
+### 4. **Pattern Matching**
+Rust’s `match` is used extensively to handle different command cases (e.g., checking for built-in commands, parsing arguments, etc.).
+
+### 5. **Redirection Parsing**
+The program supports output and error redirection (e.g., `>`, `2>`, `>>`) which is parsed using the `parse_redirection` function. It modifies how the command output is written.
+
+## Example Commands
+
+- `pwd`: Prints the current working directory.
+- `cd <dir>`: Changes the current working directory to `<dir>`.
+- External commands like `ls`, `echo`, etc., can be executed if they are available in the system’s `PATH`.
+
+## Usage
+1. Clone the repository or copy the code into a Rust project.
+2. Run the program using `cargo run`.
+3. Enter commands in the shell-like prompt and observe the outputs.
+4. Use redirection operators (e.g., `>`, `>>`, `2>`, `2>>`) to redirect command outputs or errors.
+
