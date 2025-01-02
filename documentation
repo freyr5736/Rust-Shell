@@ -1,5 +1,5 @@
 
-# Rust Shell-like Command Handler Documentation
+# Rust Shell Documentation
 
 ## Overview
 This Rust program implements a shell-like command handler that can execute built-in commands (like `cd` and `pwd`), handle external commands, and manage output and error redirections. It uses a global variable for the current working directory and processes commands entered by the user.
