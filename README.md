@@ -46,13 +46,13 @@ cd <dir>: Changes the current directory to the specified one.
 
 Example:
 
-```bash
+```
 $ cd /path/to/directory
 
 
 Redirection: You can redirect output or error to a file using the following operators:
 
-```bash
+```
 >: Redirects standard output to a file.
 >>: Appends standard output to a file.
 2>: Redirects standard error to a file.
